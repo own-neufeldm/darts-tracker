@@ -1,6 +1,7 @@
 # editor
 .config
 .vscode
+ideas.yml
 
 # csharp
 bin
