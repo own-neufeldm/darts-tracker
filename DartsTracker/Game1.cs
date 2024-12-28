@@ -1,51 +1,67 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace DartsTracker;
 
 public class Game1 : Game
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+  private readonly GraphicsDeviceManager Graphics;
+  private SpriteBatch SpriteBatch;
+  private Texture2D BoardTexture;
 
-    public Game1()
-    {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
-    }
+  public Game1()
+  {
+    this.Graphics = new GraphicsDeviceManager(this);
+    this.Window.Title = "Darts Tracker";
+    this.Content.RootDirectory = "Content";
+    this.IsMouseVisible = true;
+  }
 
-    protected override void Initialize()
-    {
-        // TODO: Add your initialization logic here
+  protected override void Initialize()
+  {
+    base.Initialize();
+  }
 
-        base.Initialize();
-    }
+  protected override void LoadContent()
+  {
+    this.SpriteBatch = new SpriteBatch(GraphicsDevice);
+    this.BoardTexture = this.Content.Load<Texture2D>("Board");
+  }
 
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+  protected override void Update(GameTime gameTime)
+  {
+    base.Update(gameTime);
+  }
 
-        // TODO: use this.Content to load your game content here
-    }
+  protected override void Draw(GameTime gameTime)
+  {
+    GraphicsDevice.Clear(Color.Black);
+    this.SpriteBatch.Begin();
+    this.Draw();
+    this.SpriteBatch.End();
+    base.Draw(gameTime);
+  }
 
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
-        // TODO: Add your update logic here
-
-        base.Update(gameTime);
-    }
-
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.Black);
-
-        // TODO: Add your drawing code here
-
-        base.Draw(gameTime);
-    }
+  private void Draw()
+  {
+    Vector2 position = new(
+      x: this.Graphics.PreferredBackBufferWidth / 2,
+      y: this.Graphics.PreferredBackBufferHeight / 2
+    );
+    Vector2 origin = new(
+      x: this.BoardTexture.Width / 2,
+      y: this.BoardTexture.Height / 2
+    );
+    this.SpriteBatch.Draw(
+      texture: this.BoardTexture,
+      position: position,
+      sourceRectangle: null,
+      color: Color.White,
+      rotation: 0f,
+      origin: origin,
+      scale: 1f,
+      effects: SpriteEffects.None,
+      layerDepth: 0f
+    );
+  }
 }
