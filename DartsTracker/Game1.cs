@@ -15,6 +15,8 @@ public class Game1 : Game
     this.Window.Title = "Darts Tracker";
     this.Content.RootDirectory = "Content";
     this.IsMouseVisible = true;
+    this.Graphics.PreferredBackBufferWidth = 1600;
+    this.Graphics.PreferredBackBufferHeight = 1200;
   }
 
   protected override void Initialize()
@@ -36,7 +38,7 @@ public class Game1 : Game
   protected override void Draw(GameTime gameTime)
   {
     GraphicsDevice.Clear(Color.Black);
-    this.SpriteBatch.Begin();
+    this.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
     this.Draw();
     this.SpriteBatch.End();
     base.Draw(gameTime);
@@ -59,7 +61,7 @@ public class Game1 : Game
       color: Color.White,
       rotation: 0f,
       origin: origin,
-      scale: 1f,
+      scale: 2.5f,
       effects: SpriteEffects.None,
       layerDepth: 0f
     );
