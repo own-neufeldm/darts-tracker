@@ -18,7 +18,7 @@ public class Game1 : Game {
     this.IsMouseVisible = true;
     this.Graphics = new GraphicsDeviceManager(this);
     this.HoveredTile = "n/a";
-    this.Scale = 1f;
+    this.Scale = 2.5f;
     this.Graphics.PreferredBackBufferWidth = (int)(450 * this.Scale);
     this.Graphics.PreferredBackBufferHeight = (int)(450 * this.Scale);
   }
@@ -35,8 +35,12 @@ public class Game1 : Game {
 
   protected override void Update(GameTime gameTime) {
     MouseState mouseState = Mouse.GetState();
-    Vector2 mousePosition = new(mouseState.X, mouseState.Y);
+    Vector2 mousePosition = new(
+      (int)(mouseState.X / this.Scale),
+      (int)(mouseState.Y / this.Scale)
+    );
     this.HoveredTile = this.Board.TileAt(mousePosition);
+
     base.Update(gameTime);
   }
 
@@ -44,11 +48,12 @@ public class Game1 : Game {
     GraphicsDevice.Clear(Color.Black);
     this.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-    Vector2 boardPosition = new(
-      this.Graphics.PreferredBackBufferWidth / 2 - this.Board.Texture.Width / 2,
-      this.Graphics.PreferredBackBufferHeight / 2 - this.Board.Texture.Height / 2
+    Vector2 dimensions = new(
+      this.Graphics.PreferredBackBufferWidth,
+      this.Graphics.PreferredBackBufferHeight
     );
-    this.Board.Draw(this.SpriteBatch, boardPosition, this.Scale);
+    this.Board.Draw(this.SpriteBatch, dimensions, this.Scale);
+
     Vector2 textPosition = new(5, 5);
     this.SpriteBatch.DrawString(
       spriteFont: this.Font,

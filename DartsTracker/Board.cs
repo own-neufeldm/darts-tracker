@@ -20,7 +20,12 @@ public class Board {
     this.LoadTiles();
   }
 
-  public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale) {
+  public void Draw(SpriteBatch spriteBatch, Vector2 dimensions, float scale) {
+    Vector2 position = new(
+      dimensions.X / 2 - this.Texture.Width * scale / 2,
+      dimensions.Y / 2 - this.Texture.Height * scale / 2
+    );
+
     spriteBatch.Draw(
       texture: this.Texture,
       position: position,
