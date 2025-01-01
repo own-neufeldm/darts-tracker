@@ -35,7 +35,8 @@ public class Game1 : Game {
 
   protected override void Update(GameTime gameTime) {
     MouseState mouseState = Mouse.GetState();
-    this.HoveredTile = this.Board.TileAt(new(mouseState.X, mouseState.Y));
+    Vector2 mousePosition = new(mouseState.X, mouseState.Y);
+    this.HoveredTile = this.Board.TileAt(mousePosition);
     base.Update(gameTime);
   }
 
