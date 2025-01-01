@@ -157,7 +157,7 @@ public class Board {
       List<Vector2> range = Utils.FloodFill(
         data: this.TextureData,
         delimiter: this.TileDelimiter,
-        point: startingPoint,
+        startingPoint: startingPoint,
         dimensions: new(this.Texture.Width, this.Texture.Width)
       );
       output.AddRange(range);

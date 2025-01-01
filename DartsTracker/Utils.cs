@@ -8,16 +8,16 @@ public static class Utils {
   public static List<Vector2> FloodFill(
     Color[] data,
     Color delimiter,
-    Vector2 point,
+    Vector2 startingPoint,
     Vector2 dimensions
   ) {
     List<Vector2> output = [];
     int[] dx = [-1, 1, 0, 0];
     int[] dy = [0, 0, -1, 1];
 
-    Stack<Vector2> stack = new([point]);
+    Stack<Vector2> stack = new([startingPoint]);
     while (stack.Count > 0) {
-      point = stack.Pop();
+      Vector2 point = stack.Pop();
       output.Add(point);
 
       for (int i = 0; i < 4; i++) {
