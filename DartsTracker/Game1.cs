@@ -30,7 +30,7 @@ public class Game1 : Game {
   protected override void LoadContent() {
     this.SpriteBatch = new SpriteBatch(GraphicsDevice);
     this.Board = new(this.Content, "Textures/Board");
-    this.Font = this.Content.Load<SpriteFont>("Fonts/Arial");
+    this.Font = this.Content.Load<SpriteFont>("Fonts/Consolas");
   }
 
   protected override void Update(GameTime gameTime) {
