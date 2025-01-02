@@ -4,6 +4,9 @@
 .editorconfig
 notes.yml
 
+# sprites
+*.aseprite
+
 # csharp
 bin
 obj
