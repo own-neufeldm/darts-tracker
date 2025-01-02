@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 
 namespace DartsTracker;
 
@@ -46,7 +49,34 @@ public class Board {
     return "n/a";
   }
 
+  private List<Vector2> LoadTile(List<Vector2> startingPoints) {
+    List<Vector2> output = [];
+
+    foreach (Vector2 startingPoint in startingPoints) {
+      List<Vector2> range = Utils.FloodFill(
+        data: this.TextureData,
+        delimiter: this.TileDelimiter,
+        startingPoint: startingPoint,
+        dimensions: new(this.Texture.Width, this.Texture.Width)
+      );
+      output.AddRange(range);
+    }
+
+    return output;
+  }
+
   private void LoadTiles() {
+    string path = Path.Combine(Environment.CurrentDirectory, "tiles.json");
+
+    try {
+      this.LoadTilesFromFile(path);
+    } catch (FileNotFoundException) {
+      this.LoadTilesFromTexture();
+      this.SaveTilesToFile(path);
+    }
+  }
+
+  private void LoadTilesFromTexture() {
     // miss
     this.Tiles.Add("0", this.LoadTile([new(210, 6)]));
 
@@ -155,19 +185,15 @@ public class Board {
     this.Tiles.Add("T5", this.LoadTile([new(178, 132)]));
   }
 
-  private List<Vector2> LoadTile(List<Vector2> startingPoints) {
-    List<Vector2> output = [];
+  private void LoadTilesFromFile(string path) {
+    string contents = File.ReadAllText(path);
+    Dictionary<string, List<Vector2>> tiles = JsonConvert.DeserializeObject<Dictionary<string, List<Vector2>>>(contents);
+    foreach (KeyValuePair<string, List<Vector2>> tile in tiles)
+      this.Tiles.Add(tile.Key, tile.Value);
+  }
 
-    foreach (Vector2 startingPoint in startingPoints) {
-      List<Vector2> range = Utils.FloodFill(
-        data: this.TextureData,
-        delimiter: this.TileDelimiter,
-        startingPoint: startingPoint,
-        dimensions: new(this.Texture.Width, this.Texture.Width)
-      );
-      output.AddRange(range);
-    }
-
-    return output;
+  private void SaveTilesToFile(string path) {
+    string contents = JsonConvert.SerializeObject(this.Tiles);
+    File.WriteAllText(path, contents);
   }
 }
