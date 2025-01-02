@@ -18,9 +18,9 @@ public class Game1 : Game {
     this.IsMouseVisible = true;
     this.Graphics = new GraphicsDeviceManager(this);
     this.HoveredTile = "n/a";
-    this.Scale = 2.5f;
-    this.Graphics.PreferredBackBufferWidth = (int)(450 * this.Scale);
-    this.Graphics.PreferredBackBufferHeight = (int)(450 * this.Scale);
+    this.Scale = 2.75f;
+    this.Graphics.PreferredBackBufferWidth = (int)(448 * this.Scale);
+    this.Graphics.PreferredBackBufferHeight = (int)(448 * this.Scale);
   }
 
   protected override void Initialize() {
