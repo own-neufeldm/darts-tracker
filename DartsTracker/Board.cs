@@ -20,7 +20,7 @@ public class Board {
     this.Texture.GetData(this.TextureData);
     this.TileDelimiter = Color.White;
     this.Tiles = [];
-    this.LoadTiles();
+    this.LoadTiles(Path.Combine(Environment.CurrentDirectory, "tiles.json"));
   }
 
   public void Draw(SpriteBatch spriteBatch, Vector2 dimensions, float scale) {
@@ -65,9 +65,7 @@ public class Board {
     return output;
   }
 
-  private void LoadTiles() {
-    string path = Path.Combine(Environment.CurrentDirectory, "tiles.json");
-
+  private void LoadTiles(string path) {
     try {
       this.LoadTilesFromFile(path);
     } catch (FileNotFoundException) {
