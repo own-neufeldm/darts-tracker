@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -13,6 +14,8 @@ public class Game1 : Game {
   private Rectangle BoardDestinationRectangle { get; set; }
   private SpriteFont Font { get; set; }
   private Vector2 TextPosition { get; set; }
+  private Texture2D TurnFrame { get; set; }
+  private Rectangle TurnFrameDestinationRectangle { get; set; }
 
   public Game1() {
     this.Content.RootDirectory = "Content";
@@ -31,21 +34,44 @@ public class Game1 : Game {
   }
 
   protected override void LoadContent() {
-    this.SpriteBatch = new SpriteBatch(GraphicsDevice);
+    this.SpriteBatch = new SpriteBatch(this.GraphicsDevice);
 
     this.Board = new(
       texture: this.Content.Load<Texture2D>("Textures/Board"),
       tileDelimiter: Color.White
     );
+    Vector2 boardScreen = new(
+      x: this.Graphics.PreferredBackBufferWidth / 3 * 2,
+      y: this.Graphics.PreferredBackBufferHeight
+    );
     this.BoardDestinationRectangle = new(
-      x: (int)((this.Graphics.PreferredBackBufferWidth - this.Board.Texture.Width * this.Scale) / 2),
-      y: (int)((this.Graphics.PreferredBackBufferHeight - this.Board.Texture.Height * this.Scale) / 2),
+      x: (int)((boardScreen.X - this.Board.Texture.Width * this.Scale) / 2),
+      y: (int)((boardScreen.Y - this.Board.Texture.Height * this.Scale) / 2),
       width: (int)(this.Board.Texture.Width * this.Scale),
       height: (int)(this.Board.Texture.Height * this.Scale)
     );
 
     this.Font = this.Content.Load<SpriteFont>("Fonts/Consolas");
     this.TextPosition = new(5, 5);
+
+    Vector2 turnFrameScreen = new(
+      x: this.Graphics.PreferredBackBufferWidth - this.Graphics.PreferredBackBufferWidth / 3,
+      y: 0
+    );
+    this.TurnFrameDestinationRectangle = new(
+      x: (int)turnFrameScreen.X,
+      y: (int)turnFrameScreen.Y,
+      width: (int)(this.Graphics.PreferredBackBufferWidth - turnFrameScreen.X),
+      height: (int)(this.Graphics.PreferredBackBufferHeight - turnFrameScreen.Y)
+    );
+    this.TurnFrame = new(
+      graphicsDevice: this.GraphicsDevice,
+      width: this.TurnFrameDestinationRectangle.Width,
+      height: this.TurnFrameDestinationRectangle.Height
+    );
+    Color[] turnFrameData = new Color[this.TurnFrameDestinationRectangle.Width * this.TurnFrameDestinationRectangle.Height];
+    Array.Fill(turnFrameData, Color.White);
+    this.TurnFrame.SetData(turnFrameData);
   }
 
   protected override void Update(GameTime gameTime) {
@@ -72,6 +98,11 @@ public class Game1 : Game {
       spriteFont: this.Font,
       text: this.HoveredTile,
       position: this.TextPosition,
+      color: Color.White
+    );
+    this.SpriteBatch.Draw(
+      texture: this.TurnFrame,
+      destinationRectangle: this.TurnFrameDestinationRectangle,
       color: Color.White
     );
 
