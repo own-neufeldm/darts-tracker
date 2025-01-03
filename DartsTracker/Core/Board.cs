@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 
-namespace DartsTracker;
+namespace DartsTracker.Core;
 
 public class Board {
   public Texture2D Texture { get; }

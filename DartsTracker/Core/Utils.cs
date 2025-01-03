@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace DartsTracker;
+namespace DartsTracker.Core;
 
 public static class Utils {
   // https://lodev.org/cgtutor/floodfill.html#4-Way_Method_With_Stack
