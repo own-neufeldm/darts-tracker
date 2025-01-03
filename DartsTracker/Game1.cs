@@ -10,17 +10,20 @@ public class Game1 : Game {
   private string HoveredTile { get; set; }
   private SpriteBatch SpriteBatch { get; set; }
   private Board Board { get; set; }
+  private Rectangle BoardDestinationRectangle { get; set; }
   private SpriteFont Font { get; set; }
+  private Vector2 TextPosition { get; set; }
 
   public Game1() {
     this.Content.RootDirectory = "Content";
     this.Window.Title = "Darts Tracker";
     this.IsMouseVisible = true;
-    this.Graphics = new GraphicsDeviceManager(this);
+    this.Graphics = new GraphicsDeviceManager(this) {
+      PreferredBackBufferWidth = 1600,
+      PreferredBackBufferHeight = 900
+    };
+    this.Scale = 2f;
     this.HoveredTile = "n/a";
-    this.Scale = 2.75f;
-    this.Graphics.PreferredBackBufferWidth = (int)(448 * this.Scale);
-    this.Graphics.PreferredBackBufferHeight = (int)(448 * this.Scale);
   }
 
   protected override void Initialize() {
@@ -29,15 +32,27 @@ public class Game1 : Game {
 
   protected override void LoadContent() {
     this.SpriteBatch = new SpriteBatch(GraphicsDevice);
-    this.Board = new(this.Content, "Textures/Board");
+
+    this.Board = new(
+      texture: this.Content.Load<Texture2D>("Textures/Board"),
+      tileDelimiter: Color.White
+    );
+    this.BoardDestinationRectangle = new(
+      x: (int)((this.Graphics.PreferredBackBufferWidth - this.Board.Texture.Width * this.Scale) / 2),
+      y: (int)((this.Graphics.PreferredBackBufferHeight - this.Board.Texture.Height * this.Scale) / 2),
+      width: (int)(this.Board.Texture.Width * this.Scale),
+      height: (int)(this.Board.Texture.Height * this.Scale)
+    );
+
     this.Font = this.Content.Load<SpriteFont>("Fonts/Consolas");
+    this.TextPosition = new(5, 5);
   }
 
   protected override void Update(GameTime gameTime) {
     MouseState mouseState = Mouse.GetState();
     Vector2 mousePosition = new(
-      (int)(mouseState.X / this.Scale),
-      (int)(mouseState.Y / this.Scale)
+      x: (int)((mouseState.X - this.BoardDestinationRectangle.X) / this.Scale),
+      y: (int)((mouseState.Y - this.BoardDestinationRectangle.Y) / this.Scale)
     );
     this.HoveredTile = this.Board.TileAt(mousePosition);
 
@@ -48,23 +63,16 @@ public class Game1 : Game {
     GraphicsDevice.Clear(Color.Black);
     this.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-    Vector2 dimensions = new(
-      this.Graphics.PreferredBackBufferWidth,
-      this.Graphics.PreferredBackBufferHeight
+    this.SpriteBatch.Draw(
+      texture: this.Board.Texture,
+      destinationRectangle: this.BoardDestinationRectangle,
+      color: Color.White
     );
-    this.Board.Draw(this.SpriteBatch, dimensions, this.Scale);
-
-    Vector2 textPosition = new(5, 5);
     this.SpriteBatch.DrawString(
       spriteFont: this.Font,
       text: this.HoveredTile,
-      position: textPosition,
-      color: Color.White,
-      rotation: 0f,
-      origin: Vector2.Zero,
-      scale: 1f,
-      effects: SpriteEffects.None,
-      layerDepth: 0f
+      position: this.TextPosition,
+      color: Color.White
     );
 
     this.SpriteBatch.End();

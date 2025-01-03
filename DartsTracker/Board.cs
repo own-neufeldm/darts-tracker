@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 
@@ -14,32 +13,13 @@ public class Board {
   private Color TileDelimiter { get; }
   private Dictionary<string, List<Vector2>> Tiles { get; }
 
-  public Board(ContentManager content, string assetName) {
-    this.Texture = content.Load<Texture2D>(assetName);
+  public Board(Texture2D texture, Color tileDelimiter) {
+    this.Texture = texture;
     this.TextureData = new Color[this.Texture.Width * this.Texture.Height];
     this.Texture.GetData(this.TextureData);
-    this.TileDelimiter = Color.White;
+    this.TileDelimiter = tileDelimiter;
     this.Tiles = [];
     this.LoadTiles(Path.Combine(Environment.CurrentDirectory, "tiles.json"));
-  }
-
-  public void Draw(SpriteBatch spriteBatch, Vector2 dimensions, float scale) {
-    Vector2 position = new(
-      dimensions.X / 2 - this.Texture.Width * scale / 2,
-      dimensions.Y / 2 - this.Texture.Height * scale / 2
-    );
-
-    spriteBatch.Draw(
-      texture: this.Texture,
-      position: position,
-      sourceRectangle: null,
-      color: Color.White,
-      rotation: 0f,
-      origin: Vector2.Zero,
-      scale: scale,
-      effects: SpriteEffects.None,
-      layerDepth: 0f
-    );
   }
 
   public string TileAt(Vector2 point) {
@@ -49,22 +29,6 @@ public class Board {
     return "n/a";
   }
 
-  private List<Vector2> LoadTile(List<Vector2> startingPoints) {
-    List<Vector2> output = [];
-
-    foreach (Vector2 startingPoint in startingPoints) {
-      List<Vector2> range = Utils.FloodFill(
-        data: this.TextureData,
-        delimiter: this.TileDelimiter,
-        startingPoint: startingPoint,
-        dimensions: new(this.Texture.Width, this.Texture.Width)
-      );
-      output.AddRange(range);
-    }
-
-    return output;
-  }
-
   private void LoadTiles(string path) {
     try {
       this.LoadTilesFromFile(path);
@@ -72,6 +36,13 @@ public class Board {
       this.LoadTilesFromTexture();
       this.SaveTilesToFile(path);
     }
+  }
+
+  private void LoadTilesFromFile(string path) {
+    string contents = File.ReadAllText(path);
+    Dictionary<string, List<Vector2>> tiles = JsonConvert.DeserializeObject<Dictionary<string, List<Vector2>>>(contents);
+    foreach (KeyValuePair<string, List<Vector2>> tile in tiles)
+      this.Tiles.Add(tile.Key, tile.Value);
   }
 
   private void LoadTilesFromTexture() {
@@ -183,11 +154,20 @@ public class Board {
     this.Tiles.Add("T5", this.LoadTile([new(178, 132)]));
   }
 
-  private void LoadTilesFromFile(string path) {
-    string contents = File.ReadAllText(path);
-    Dictionary<string, List<Vector2>> tiles = JsonConvert.DeserializeObject<Dictionary<string, List<Vector2>>>(contents);
-    foreach (KeyValuePair<string, List<Vector2>> tile in tiles)
-      this.Tiles.Add(tile.Key, tile.Value);
+  private List<Vector2> LoadTile(List<Vector2> startingPoints) {
+    List<Vector2> output = [];
+
+    foreach (Vector2 startingPoint in startingPoints) {
+      List<Vector2> range = Utils.FloodFill(
+        data: this.TextureData,
+        delimiter: this.TileDelimiter,
+        startingPoint: startingPoint,
+        dimensions: new(this.Texture.Width, this.Texture.Width)
+      );
+      output.AddRange(range);
+    }
+
+    return output;
   }
 
   private void SaveTilesToFile(string path) {
