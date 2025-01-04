@@ -8,11 +8,13 @@ using Microsoft.Xna.Framework.Input;
 namespace DartsTracker.Screen;
 
 public class ScreenGame : IScreen {
-  private string HoveredTile { get; set; }
+  private SpriteFont Font { get; set; }
+
   private Board Board { get; set; }
   private Viewport BoardViewport { get; set; }
   private Rectangle BoardDestinationRectangle { get; set; }
-  private SpriteFont Font { get; set; }
+  private string HoveredTile { get; set; }
+
   private Texture2D TurnFrame { get; set; }
   private Viewport TurnFrameViewport { get; set; }
   private Rectangle TurnFrameDestinationRectangle { get; set; }
@@ -21,14 +23,14 @@ public class ScreenGame : IScreen {
     ContentManager content,
     GraphicsDevice graphicsDevice
   ) {
+    // load font
+    this.Font = content.Load<SpriteFont>("Fonts/Consolas");
+
     // load board
     this.Board = new(
       texture: content.Load<Texture2D>("Textures/Board"),
       tileDelimiter: Color.White
     );
-
-    // load font
-    this.Font = content.Load<SpriteFont>("Fonts/Consolas");
 
     // load turn frame
     this.TurnFrame = new(graphicsDevice, width: 1, height: 1);
