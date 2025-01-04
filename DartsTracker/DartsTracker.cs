@@ -23,10 +23,7 @@ public class DartsTracker : Game {
   }
 
   protected override void LoadContent() {
-    System.Diagnostics.Debug.WriteLine($"Graphics.GraphicsDevice.Viewport: {this.GraphicsDevice.Viewport}");
-    System.Diagnostics.Debug.WriteLine($"Graphics.GraphicsDevice.DisplayMode: {this.GraphicsDevice.DisplayMode}");
-    System.Diagnostics.Debug.WriteLine($"Window.ClientBounds: {this.Window.ClientBounds}");
-    this.Screen.LoadContent(this.Content, this.Graphics);
+    this.Screen.LoadContent(this.Content, this.GraphicsDevice);
     // base.LoadContent() is empty
   }
 
@@ -41,7 +38,7 @@ public class DartsTracker : Game {
   }
 
   protected override void Draw(GameTime gameTime) {
-    this.Screen.Draw(this.Graphics, gameTime);
+    this.Screen.Draw(this.GraphicsDevice, gameTime);
     base.Draw(gameTime);
   }
 }

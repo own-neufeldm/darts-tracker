@@ -18,10 +18,10 @@ public class ScreenManager : IDisposable {
 
   public void LoadContent(
     ContentManager content,
-    GraphicsDeviceManager graphics
+    GraphicsDevice graphicsDevice
   ) {
-    this.SpriteBatch = new(graphics.GraphicsDevice);
-    this.CurrentScreen.LoadContent(content, graphics);
+    this.SpriteBatch = new(graphicsDevice);
+    this.CurrentScreen.LoadContent(content, graphicsDevice);
   }
 
   public void UnloadContent() {
@@ -33,8 +33,8 @@ public class ScreenManager : IDisposable {
     this.CurrentScreen.Update(viewport, gameTime);
   }
 
-  public void Draw(GraphicsDeviceManager graphics, GameTime gameTime) {
-    graphics.GraphicsDevice.Clear(Color.Black);
+  public void Draw(GraphicsDevice graphicsDevice, GameTime gameTime) {
+    graphicsDevice.Clear(Color.Black);
     this.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
     this.CurrentScreen.Draw(this.SpriteBatch, gameTime);
     this.SpriteBatch.End();

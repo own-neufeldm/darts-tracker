@@ -7,7 +7,7 @@ namespace DartsTracker.Screen;
 public interface IScreen {
   public void LoadContent(
     ContentManager content,
-    GraphicsDeviceManager graphics
+    GraphicsDevice graphicsDevice
   );
 
   public void UnloadContent();

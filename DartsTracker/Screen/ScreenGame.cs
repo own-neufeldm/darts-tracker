@@ -17,7 +17,10 @@ public class ScreenGame : IScreen {
   private Viewport TurnFrameViewport { get; set; }
   private Rectangle TurnFrameDestinationRectangle { get; set; }
 
-  public void LoadContent(ContentManager content, GraphicsDeviceManager graphics) {
+  public void LoadContent(
+    ContentManager content,
+    GraphicsDevice graphicsDevice
+  ) {
     // load board
     this.Board = new(
       texture: content.Load<Texture2D>("Textures/Board"),
@@ -28,7 +31,7 @@ public class ScreenGame : IScreen {
     this.Font = content.Load<SpriteFont>("Fonts/Consolas");
 
     // load turn frame
-    this.TurnFrame = new(graphics.GraphicsDevice, width: 1, height: 1);
+    this.TurnFrame = new(graphicsDevice, width: 1, height: 1);
     this.TurnFrame.SetData([Color.White]);
   }
 
@@ -46,25 +49,17 @@ public class ScreenGame : IScreen {
       width: viewport.Width / 3 * 2,
       height: viewport.Height
     );
+    int boardMargin = 10;
     float boardScale = Math.Min(
-      (float)this.BoardViewport.Width / this.Board.Texture.Width,
-      (float)this.BoardViewport.Height / this.Board.Texture.Height
+      (this.BoardViewport.Width - boardMargin) / (float)this.Board.Texture.Width,
+      (this.BoardViewport.Height - boardMargin) / (float)this.Board.Texture.Height
     );
     this.BoardDestinationRectangle = new(
-      x: (int)(this.BoardViewport.Width / 2 - this.Board.Texture.Width * boardScale / 2),
-      y: (int)(this.BoardViewport.Height / 2 - this.Board.Texture.Height * boardScale / 2),
+      x: viewport.X + (int)(this.BoardViewport.Width / 2 - this.Board.Texture.Width * boardScale / 2),
+      y: viewport.Y + (int)(this.BoardViewport.Height / 2 - this.Board.Texture.Height * boardScale / 2),
       width: (int)(this.Board.Texture.Width * boardScale),
       height: (int)(this.Board.Texture.Height * boardScale)
     );
-
-    // update turn frame
-    this.TurnFrameViewport = new(
-      x: this.BoardViewport.X + this.BoardViewport.Width + 1,
-      y: viewport.Y,
-      width: viewport.Width - this.BoardViewport.Width,
-      height: viewport.Height
-    );
-    this.TurnFrameDestinationRectangle = this.TurnFrameViewport.Bounds;
 
     // update hovered tile
     MouseState mouseState = Mouse.GetState();
@@ -73,6 +68,15 @@ public class ScreenGame : IScreen {
       y: (int)((mouseState.Y - this.BoardDestinationRectangle.Y) / boardScale)
     );
     this.HoveredTile = this.Board.TileAt(mousePosition);
+
+    // update turn frame
+    this.TurnFrameViewport = new(
+      x: viewport.X + this.BoardViewport.Width,
+      y: viewport.Y,
+      width: viewport.Width - this.BoardViewport.Width,
+      height: viewport.Height
+    );
+    this.TurnFrameDestinationRectangle = this.TurnFrameViewport.Bounds;
   }
 
   public void Draw(SpriteBatch spriteBatch, GameTime gameTime) {
@@ -101,9 +105,5 @@ public class ScreenGame : IScreen {
       destinationRectangle: this.TurnFrameDestinationRectangle,
       color: Color.White
     );
-  }
-
-  public void LoadContent() {
-    throw new NotImplementedException();
   }
 }
