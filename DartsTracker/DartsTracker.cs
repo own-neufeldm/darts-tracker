@@ -22,7 +22,6 @@ public class DartsTracker : Game {
   }
 
   private void WindowClientSizeChanged(object sender, EventArgs e) {
-    System.Diagnostics.Debug.WriteLine($"Window.ClientBounds: {this.Window.ClientBounds}");
     int width = Math.Max(800, this.Window.ClientBounds.Width);
     int height = Math.Max(450, this.Window.ClientBounds.Height);
     this.Graphics.PreferredBackBufferWidth = width;
