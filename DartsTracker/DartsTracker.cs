@@ -1,6 +1,5 @@
 ﻿using DartsTracker.Screen;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DartsTracker;
 
@@ -16,6 +15,7 @@ public class DartsTracker : Game {
       PreferredBackBufferWidth = 1600,
       PreferredBackBufferHeight = 900
     };
+    this.Screen = new();
   }
 
   protected override void Initialize() {
@@ -23,9 +23,10 @@ public class DartsTracker : Game {
   }
 
   protected override void LoadContent() {
-    SpriteBatch spriteBatch = new(this.GraphicsDevice);
-    this.Screen = new(this.Graphics, spriteBatch, this.Content);
-    this.Screen.LoadContent();
+    System.Diagnostics.Debug.WriteLine($"Graphics.GraphicsDevice.Viewport: {this.GraphicsDevice.Viewport}");
+    System.Diagnostics.Debug.WriteLine($"Graphics.GraphicsDevice.DisplayMode: {this.GraphicsDevice.DisplayMode}");
+    System.Diagnostics.Debug.WriteLine($"Window.ClientBounds: {this.Window.ClientBounds}");
+    this.Screen.LoadContent(this.Content, this.Graphics);
     // base.LoadContent() is empty
   }
 
@@ -35,13 +36,12 @@ public class DartsTracker : Game {
   }
 
   protected override void Update(GameTime gameTime) {
-    this.Screen.Update(gameTime);
+    this.Screen.Update(this.Graphics.GraphicsDevice.Viewport, gameTime);
     base.Update(gameTime);
   }
 
   protected override void Draw(GameTime gameTime) {
-    this.GraphicsDevice.Clear(Color.Black);
-    this.Screen.Draw(gameTime);
+    this.Screen.Draw(this.Graphics, gameTime);
     base.Draw(gameTime);
   }
 }
